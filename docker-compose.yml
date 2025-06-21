@@ -1,0 +1,55 @@
+# # docker-compose.yml
+# version: '3.8'
+# services:
+#   postgres:
+#     image: postgres
+#     container_name: my_postgres
+#     environment:
+#       POSTGRES_USER: myuser
+#       POSTGRES_PASSWORD: mypass
+#       POSTGRES_DB: mydb
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+
+# volumes:
+#   pgdata:
+
+services:
+  backend:
+    build: ./backend
+    container_name: my_backend
+    ports:
+      - "5000:5000"
+    environment:
+      DB_USER: myuser
+      DB_PASS: mypass
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: mydb
+    depends_on:
+      - postgres
+
+  frontend:
+    build: .
+    container_name: my_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres
+    container_name: my_postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
